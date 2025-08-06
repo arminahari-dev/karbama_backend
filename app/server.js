@@ -44,7 +44,7 @@ class Application {
     this.#app.use(express.static(path.join(__dirname, "..")));
     this.#app.use(
       "/uploads",
-      express.static(path.join(__dirname, "..", "uploads"))
+      express.static(path.join(__dirname, "app", "uploads"))
     );
     this.#app.use(express.urlencoded({ extended: true }));
   }
