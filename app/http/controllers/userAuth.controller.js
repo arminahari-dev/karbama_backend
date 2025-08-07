@@ -85,7 +85,7 @@ class userAuthController extends Controller {
       res.cookie("tmpUser", tmpToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "Lax",
+        sameSite: "None",
         maxAge: 5 * 60 * 1000,
       });
 
@@ -347,7 +347,7 @@ class userAuthController extends Controller {
       expires: Date.now(),
       httpOnly: true,
       signed: true,
-      sameSite: "Lax",
+      sameSite: "None",
       secure: true,
       path: "/",
       domain: process.env.DOMAIN,
