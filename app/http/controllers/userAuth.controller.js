@@ -87,6 +87,7 @@ class userAuthController extends Controller {
         secure: true,
         sameSite: "None",
         maxAge: 5 * 60 * 1000,
+        domain: process.env.COOKIE_DOMAIN,
       });
 
       return res.status(HttpStatus.OK).json({

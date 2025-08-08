@@ -31,7 +31,7 @@ async function setAccessToken(res, user) {
     signed: true, // Indicates if the cookie should be signed
     sameSite: "None",
     secure: true,
-    domain: process.env.DOMAIN,
+    domain: process.env.COOKIE_DOMAIN,
   };
   res.cookie(
     "accessToken",
@@ -47,7 +47,7 @@ async function setRefreshToken(res, user) {
     signed: true, // Indicates if the cookie should be signed
     sameSite: "None",
     secure: true,
-    domain: process.env.DOMAIN,
+    domain: process.env.COOKIE_DOMAIN,
   };
   res.cookie(
     "refreshToken",
@@ -330,6 +330,7 @@ async function setRoleToken(res, user) {
     sameSite: "None",
     secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 365,
+    domain: process.env.COOKIE_DOMAIN,
   });
 }
 
