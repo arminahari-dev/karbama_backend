@@ -42,6 +42,7 @@ class Application {
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       allowedHeaders: "Content-Type, Authorization",
     };
+    this.#app.use(cors(corsOptions));
     this.#app.options("*", cors(corsOptions));
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
