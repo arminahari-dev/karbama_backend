@@ -36,9 +36,13 @@ class Application {
   }
   configServer() {
     this.#app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY));
-    this.#app.use(
-      cors({ credentials: true, origin: process.env.ALLOW_CORS_ORIGIN })
-    );
+    const corsOptions = {
+      origin: process.env.ALLOW_CORS_ORIGIN,
+      credentials: true,
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      allowedHeaders: "Content-Type, Authorization",
+    };
+    this.#app.options("*", cors(corsOptions));
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
     this.#app.use(express.static(path.join(__dirname, "..")));
