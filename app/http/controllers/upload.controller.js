@@ -5,7 +5,7 @@ const uploadImage = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: "هیچ فایلی ارسال نشده" });
     }
-    const imageUrl = `${process.env.DOMAIN}/uploads/${req.file.filename}`;
+    const imageUrl = `${process.env.BASE_URL}/uploads/${req.file.filename}`;
     const userId = req.user?._id;
     if (userId) {
       await UserModel.updateOne(
