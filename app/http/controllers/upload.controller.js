@@ -5,10 +5,13 @@ const uploadImage = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: "هیچ فایلی ارسال نشده" });
     }
-    const imageUrl = `app/router/uploads/${req.file.filename}`;
+    const imageUrl = `${process.env.DOMAIN}/uploads/${req.file.filename}`;
     const userId = req.user?._id;
     if (userId) {
-      await UserModel.updateOne({ _id: req.user._id }, { $set: { avatar: imageUrl } });
+      await UserModel.updateOne(
+        { _id: req.user._id },
+        { $set: { avatar: imageUrl } }
+      );
     }
     res.json({ message: "آپلود عکس با موفقیت انجام شد", imageUrl });
   } catch (err) {

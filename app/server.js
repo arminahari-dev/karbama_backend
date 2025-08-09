@@ -49,9 +49,8 @@ class Application {
     this.#app.use(express.static(path.join(__dirname, "..")));
     this.#app.use(
       "/uploads",
-      express.static(path.join(__dirname, "app", "uploads"))
+      express.static(path.join(__dirname, "router", "uploads"))
     );
-    this.#app.use(express.urlencoded({ extended: true }));
   }
   configRoutes() {
     this.#app.use("/api", allRoutes);
