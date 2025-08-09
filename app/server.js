@@ -40,7 +40,7 @@ class Application {
       origin: process.env.ALLOW_CORS_ORIGIN,
       credentials: true,
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-      allowedHeaders: "Content-Type, Authorization",
+      allowedHeaders: ["Content-Type", "Authorization", "Accept"],
     };
     this.#app.use(cors(corsOptions));
     this.#app.options("*", cors(corsOptions));
