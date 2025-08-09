@@ -48,8 +48,8 @@ class Application {
     this.#app.use(express.urlencoded({ extended: true }));
     this.#app.use(express.static(path.join(__dirname, "..")));
     this.#app.use(
-      "/uploads",
-      express.static(path.join(__dirname, "router", "uploads"))
+      "/api/uploads",
+      express.static(path.join(__dirname, "..", "public", "uploads"))
     );
   }
   configRoutes() {
