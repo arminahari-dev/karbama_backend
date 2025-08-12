@@ -5,12 +5,13 @@ const UserSchema = new mongoose.Schema(
   {
     name: { type: String, trim: true },
     avatar: { type: String },
+    resume: { type: String, default: null },
     biography: { type: String, default: null },
     email: { type: String, lowercase: true, trim: true },
     phoneNumber: { type: String, trim: true },
     password: { type: String },
     otp: {
-      code: { type: Number, defaul: 0 },
+      code: { type: Number, default: 0 },
       expiresIn: { type: Date, default: 0 },
     },
     resetLink: { type: String, default: null },
@@ -39,6 +40,11 @@ UserSchema.methods.toJSON = function () {
   delete obj.avatar;
   return obj;
 };
+
+UserSchema.virtual("resumeUrl").get(function () {
+  if (this.resume) return `${process.env.SERVER_URL}/${this.resume}`;
+  return null;
+});
 
 UserSchema.index({
   name: "text",
