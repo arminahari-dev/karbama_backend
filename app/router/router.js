@@ -9,8 +9,9 @@ const { categoryRoutes } = require("./category");
 const { projectRoutes } = require("./project");
 const { proposalRoutes } = require("./proposal");
 const { userAuthRoutes } = require("./userAuth");
-const uploadRoutes = require("./upload.routes");
+const {avatarRoutes} = require("./upload.routes");
 const { UserRoutes } = require("./user.routes");
+const { resumeRoutes } = require("./resume.routes");
 
 const router = require("express").Router();
 
@@ -31,8 +32,9 @@ router.use(
   authorize(ROLES.ADMIN),
   adminRoutes
 );
-router.use("/upload", uploadRoutes);
-router.use("/user", UserRoutes)
+router.use("/upload/avatar", avatarRoutes);
+router.use("/user", UserRoutes);
+router.use("/upload/resume", resumeRoutes);
 
 module.exports = {
   allRoutes: router,

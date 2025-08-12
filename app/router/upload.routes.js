@@ -24,6 +24,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-router.post("/avatar", verifyAccessToken, upload.single("avatar"), uploadImage);
+router.post("/", verifyAccessToken, upload.single("avatar"), uploadImage);
 
-module.exports = router;
+module.exports = {
+  avatarRoutes: router,
+};
