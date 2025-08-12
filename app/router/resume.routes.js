@@ -1,6 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 const express = require("express");
+const { uploadResume } = require("../http/controllers/resume.controller");
 const { verifyAccessToken } = require("../http/middlewares/user.middleware");
 const fs = require("fs");
 
