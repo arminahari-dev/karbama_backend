@@ -27,17 +27,29 @@ const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-  const filetypes = /jpeg|jpg|png/;
-  const mimetype = filetypes.test(file.mimetype);
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  if (mimetype && extname) {
-    return cb(null, true);
-  }
-  cb(new Error("فرمت فایل باید jpg, jpeg یا png باشد"));
-},
+    const filetypes = /jpeg|jpg|png/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error("فرمت فایل باید jpg, jpeg یا png باشد"));
+  },
 });
 
-router.post("/", verifyAccessToken, upload.single("avatar"), uploadImage);
+router.post("/", verifyAccessToken, (req, res, next) => {
+  upload.single("avatar")(req, res, (err) => {
+    if (err) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({ error: "حجم فایل بیش از حد مجاز است" });
+      }
+      return res.status(400).json({ error: err.message });
+    }
+    uploadImage(req, res);
+  });
+});
 
 module.exports = {
   avatarRoutes: router,
