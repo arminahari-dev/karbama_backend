@@ -190,39 +190,6 @@ class userAuthController extends Controller {
       }
     );
   }
-  // async completeProfile(req, res) {
-  //   await completeProfileSchema.validateAsync(req.body);
-  //   const { user } = req;
-  //   const { name, email, role } = req.body;
-
-  //   if (!user.isVerifiedPhoneNumber)
-  //     throw createError.Forbidden("شماره موبایل خود را تایید کنید.");
-
-  //   const duplicateUser = await UserModel.findOne({ email });
-  //   console.log(duplicateUser);
-  //   if (duplicateUser)
-  //     throw createError.BadRequest(
-  //       "کاربری با این ایمیل قبلا ثبت نام کرده است."
-  //     );
-
-  //   const updatedUser = await UserModel.findOneAndUpdate(
-  //     { _id: user._id },
-  //     { $set: { name, email, isActive: true, role } },
-  //     { new: true }
-  //   );
-  //   // await setAuthCookie(res, updatedUser);
-  //   await setAccessToken(res, updatedUser);
-  //   await setRefreshToken(res, updatedUser);
-  //   await setRoleToken(res, user);
-
-  //   return res.status(HttpStatus.OK).send({
-  //     statusCode: HttpStatus.OK,
-  //     data: {
-  //       message: "اطلاعات شما با موفقیت تکمیل شد",
-  //       user: updatedUser,
-  //     },
-  //   });
-  // }
   async completeProfile(req, res) {
     const tmpToken = req.cookies?.tmpUser;
     if (!tmpToken) throw createError.Unauthorized("دسترسی غیرمجاز");
@@ -347,7 +314,7 @@ class userAuthController extends Controller {
       maxAge: 1,
       expires: Date.now(),
       httpOnly: true,
-      signed: true,
+      signed: false,
       sameSite: "None",
       secure: true,
       path: "/",

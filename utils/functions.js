@@ -44,7 +44,7 @@ async function setRefreshToken(res, user) {
   const cookieOptions = {
     maxAge: 1000 * 60 * 60 * 24 * 365, // would expire after 1 year
     httpOnly: true, // The cookie only accessible by the web server
-    signed: true, // Indicates if the cookie should be signed
+    signed: false, // Indicates if the cookie should be signed
     sameSite: "None",
     secure: true,
     domain: process.env.COOKIE_DOMAIN,
@@ -286,9 +286,11 @@ async function getUserCartDetail(userId) {
   ]);
   return copyObject(cartDetail);
 }
+
 function copyObject(object) {
   return JSON.parse(JSON.stringify(object));
 }
+
 function deleteInvalidPropertyInObject(data = {}, blackListFields = []) {
   // let nullishData = ["", " ", "0", 0, null, undefined];
   let nullishData = ["", " ", null, undefined];
@@ -301,6 +303,7 @@ function deleteInvalidPropertyInObject(data = {}, blackListFields = []) {
     if (nullishData.includes(data[key])) delete data[key];
   });
 }
+
 async function checkProductExist(id) {
   const { ProductModel } = require("../app/models/product");
   if (!mongoose.isValidObjectId(id))
