@@ -28,10 +28,10 @@ async function setAccessToken(res, user) {
   const cookieOptions = {
     maxAge: 1000 * 60 * 60 * 24 * 1, // would expire after 1 days
     httpOnly: true, // The cookie only accessible by the web server
-    signed: true, // Indicates if the cookie should be signed
+    signed: false, // Indicates if the cookie should be signed
     sameSite: "None",
     secure: true,
-    domain: process.env.COOKIE_DOMAIN,
+    domain: process.env.DOMAIN,
   };
   res.cookie(
     "accessToken",
@@ -330,7 +330,7 @@ async function setRoleToken(res, user) {
     sameSite: "None",
     secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 365,
-    domain: process.env.COOKIE_DOMAIN,
+    domain: process.env.DOMAIN,
   });
 }
 
