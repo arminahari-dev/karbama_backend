@@ -22,7 +22,7 @@ class Application {
   }
   createServer() {
     this.#app.listen(this.#PORT, () =>
-      console.log(`listening on port ${this.#PORT}`)
+      console.log(`listening on port ${this.#PORT}`),
     );
   }
   connectToDB() {
@@ -36,6 +36,7 @@ class Application {
   }
   configServer() {
     this.#app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY));
+    this.#app.set("trust proxy", 1);
     const corsOptions = {
       origin: process.env.ALLOW_CORS_ORIGIN,
       credentials: true,
@@ -49,7 +50,7 @@ class Application {
     this.#app.use(express.static(path.join(__dirname, "..")));
     this.#app.use(
       "/api/uploads",
-      express.static(path.join(__dirname, "..", "public", "uploads"))
+      express.static(path.join(__dirname, "..", "public", "uploads")),
     );
   }
   configRoutes() {
