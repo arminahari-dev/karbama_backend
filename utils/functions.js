@@ -77,7 +77,7 @@ function generateToken(user, expiresIn, secret) {
 }
 
 function verifyRefreshToken(req) {
-  const refreshToken = req.signedCookies["refreshToken"];
+  const refreshToken = req.cookies["refreshToken"];
 
   if (!refreshToken) {
     throw createError.Unauthorized("لطفا وارد حساب کاربری خود شوید.");

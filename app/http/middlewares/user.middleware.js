@@ -51,11 +51,10 @@ async function isVerifiedUser(req, res, next) {
 }
 
 function decideAuthMiddleware(req, res, next) {
-  const accessToken = req.signedCookies["accessToken"];
+  const accessToken = req.cookies["accessToken"];
   if (accessToken) {
     return verifyAccessToken(req, res, next);
   }
-  // skip this middleware
   next();
 }
 
