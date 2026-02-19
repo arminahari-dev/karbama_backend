@@ -5,7 +5,7 @@ const { UserModel } = require("../../models/user");
 
 async function verifyAccessToken(req, res, next) {
   try {
-    const accessToken = req.signedCookies["accessToken"];
+    const accessToken = req.cookies["accessToken"];
     if (!accessToken) {
       throw createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید.");
     }
