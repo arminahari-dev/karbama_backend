@@ -30,6 +30,7 @@ async function setAccessToken(res, user) {
     httpOnly: true,
     sameSite: "None",
     secure: true,
+    path: "/",
     domain: process.env.COOKIE_DOMAIN,
   };
   res.cookie(
@@ -45,6 +46,7 @@ async function setRefreshToken(res, user) {
     httpOnly: true,
     sameSite: "None",
     secure: true,
+    path: "/",
     domain: process.env.COOKIE_DOMAIN,
   };
   res.cookie(
