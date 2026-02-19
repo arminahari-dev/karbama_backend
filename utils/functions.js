@@ -28,10 +28,9 @@ async function setAccessToken(res, user) {
   const cookieOptions = {
     maxAge: 1000 * 60 * 60 * 24 * 1,
     httpOnly: true,
-    signed: true,
     sameSite: "None",
     secure: true,
-    domain: process.env.DOMAIN,
+    domain: process.env.COOKIE_DOMAIN,
   };
   res.cookie(
     "accessToken",
@@ -44,10 +43,9 @@ async function setRefreshToken(res, user) {
   const cookieOptions = {
     maxAge: 1000 * 60 * 60 * 24 * 365,
     httpOnly: true,
-    signed: true,
     sameSite: "None",
     secure: true,
-    domain: process.env.DOMAIN,
+    domain: process.env.COOKIE_DOMAIN,
   };
   res.cookie(
     "refreshToken",
@@ -321,17 +319,16 @@ function invoiceNumberGenerator() {
 async function setRoleToken(res, user) {
   const roleToken = JWT.sign(
     { role: user.role },
-    process.env.ACCESS_TOKEN_SECRET_KEY, // یا یه secret مخصوص
+    process.env.ACCESS_TOKEN_SECRET_KEY,
     { expiresIn: "1y" },
   );
 
   res.cookie("roleToken", roleToken, {
-    httpOnly: false, // ⚡️ قابل دسترس سمت کلاینت
-    signed: false, // sign نیاز نیست
+    httpOnly: false,
     sameSite: "None",
     secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 365,
-    domain: process.env.DOMAIN,
+    domain: process.env.COOKIE_DOMAIN,
   });
 }
 

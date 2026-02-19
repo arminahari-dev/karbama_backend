@@ -11,7 +11,7 @@ const {
 const createError = require("http-errors");
 const { UserModel } = require("../../models/user");
 const Kavenegar = require("kavenegar");
-const CODE_EXPIRES = 90 * 1000; //90 seconds in miliseconds
+const CODE_EXPIRES = 90 * 1000;
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const {
   completeProfileSchema,
@@ -296,7 +296,7 @@ class userAuthController extends Controller {
     await setAccessToken(res, user);
     await setRefreshToken(res, user);
     await setRoleToken(res, user);
-    
+
     return res.status(HttpStatus.OK).json({
       StatusCode: HttpStatus.OK,
       data: {
@@ -320,11 +320,10 @@ class userAuthController extends Controller {
       maxAge: 1,
       expires: Date.now(),
       httpOnly: true,
-      signed: false,
       sameSite: "None",
       secure: true,
       path: "/",
-      domain: process.env.DOMAIN,
+      domain: process.env.COOKIE_DOMAIN,
     };
     res.cookie("accessToken", null, cookieOptions);
     res.cookie("refreshToken", null, cookieOptions);
