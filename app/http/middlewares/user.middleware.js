@@ -9,12 +9,8 @@ async function verifyAccessToken(req, res, next) {
     if (!accessToken) {
       throw createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید.");
     }
-    const token = cookieParser.signedCookie(
-      accessToken,
-      process.env.COOKIE_PARSER_SECRET_KEY
-    );
     JWT.verify(
-      token,
+      accessToken,
       process.env.ACCESS_TOKEN_SECRET_KEY,
       async (err, payload) => {
         try {
@@ -30,7 +26,7 @@ async function verifyAccessToken(req, res, next) {
         } catch (error) {
           next(error);
         }
-      }
+      },
     );
   } catch (error) {
     next(error);
@@ -45,7 +41,7 @@ async function isVerifiedUser(req, res, next) {
     }
     if (user.status !== 2) {
       throw createHttpError.Forbidden(
-        "پروفایل شما مورد تایید قرار نگرفته است."
+        "پروفایل شما مورد تایید قرار نگرفته است.",
       );
     }
     return next();

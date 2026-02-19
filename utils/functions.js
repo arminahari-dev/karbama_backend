@@ -26,9 +26,9 @@ function toPersianDigits(n) {
 
 async function setAccessToken(res, user) {
   const cookieOptions = {
-    maxAge: 1000 * 60 * 60 * 24 * 1, // would expire after 1 days
-    httpOnly: true, // The cookie only accessible by the web server
-    signed: false, // Indicates if the cookie should be signed
+    maxAge: 1000 * 60 * 60 * 24 * 1,
+    httpOnly: true,
+    signed: true,
     sameSite: "None",
     secure: true,
     domain: process.env.DOMAIN,
@@ -42,9 +42,9 @@ async function setAccessToken(res, user) {
 
 async function setRefreshToken(res, user) {
   const cookieOptions = {
-    maxAge: 1000 * 60 * 60 * 24 * 365, // would expire after 1 year
-    httpOnly: true, // The cookie only accessible by the web server
-    signed: false, // Indicates if the cookie should be signed
+    maxAge: 1000 * 60 * 60 * 24 * 365,
+    httpOnly: true,
+    signed: true,
     sameSite: "None",
     secure: true,
     domain: process.env.DOMAIN,
