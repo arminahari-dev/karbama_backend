@@ -60,7 +60,7 @@ class userAuthController extends Controller {
 
     const user = await UserModel.findOne(
       { phoneNumber },
-      { password: 0, refreshToken: 0, accessToken: 0 }
+      { password: 0, refreshToken: 0, accessToken: 0 },
     );
 
     if (!user) throw createError.NotFound("کاربری با این مشخصات یافت نشد");
@@ -79,7 +79,7 @@ class userAuthController extends Controller {
       const tmpToken = sign(
         { userId: user._id },
         process.env.ACCESS_TOKEN_SECRET_KEY,
-        { expiresIn: "5m" }
+        { expiresIn: "5m" },
       );
 
       res.cookie("tmpUser", tmpToken, {
@@ -154,7 +154,7 @@ class userAuthController extends Controller {
     });
     const updatedResult = await UserModel.updateOne(
       { phoneNumber },
-      { $set: objectData }
+      { $set: objectData },
     );
     return !!updatedResult.modifiedCount;
   }
@@ -176,7 +176,7 @@ class userAuthController extends Controller {
             statusCode: HttpStatus.OK,
             data: {
               message: `کد تائید برای شماره موبایل ${toPersianDigits(
-                phoneNumber
+                phoneNumber,
               )} ارسال گردید`,
               expiresIn: CODE_EXPIRES,
               phoneNumber,
@@ -187,7 +187,7 @@ class userAuthController extends Controller {
           statusCode: status,
           message: "کد اعتبارسنجی ارسال نشد",
         });
-      }
+      },
     );
   }
   async completeProfile(req, res) {
@@ -210,7 +210,7 @@ class userAuthController extends Controller {
     const duplicateUser = await UserModel.findOne({ email });
     if (duplicateUser)
       throw createError.BadRequest(
-        "کاربری با این ایمیل قبلا ثبت نام کرده است."
+        "کاربری با این ایمیل قبلا ثبت نام کرده است.",
       );
 
     let status = 1;
@@ -229,7 +229,7 @@ class userAuthController extends Controller {
           status,
         },
       },
-      { new: true }
+      { new: true },
     );
 
     if (updatedUser.role === "ADMIN") {
@@ -273,7 +273,7 @@ class userAuthController extends Controller {
       { _id: userId },
       {
         $set: { name, email, biography, phoneNumber },
-      }
+      },
     );
     if (!updateResult.modifiedCount === 0)
       throw createError.BadRequest("اطلاعات ویرایش نشد");
@@ -285,12 +285,18 @@ class userAuthController extends Controller {
     });
   }
   async refreshToken(req, res) {
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+    );
+
     const userId = await verifyRefreshToken(req);
     const user = await UserModel.findById(userId);
+
     await setAccessToken(res, user);
     await setRefreshToken(res, user);
-
     await setRoleToken(res, user);
+    
     return res.status(HttpStatus.OK).json({
       StatusCode: HttpStatus.OK,
       data: {

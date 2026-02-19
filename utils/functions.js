@@ -79,16 +79,15 @@ function generateToken(user, expiresIn, secret) {
 }
 
 function verifyRefreshToken(req) {
-  const refreshToken = req.cookies["refreshToken"];
+  const refreshToken = req.signedCookies["refreshToken"];
+
   if (!refreshToken) {
     throw createError.Unauthorized("لطفا وارد حساب کاربری خود شوید.");
   }
 
-  const token = refreshToken;
-
   return new Promise((resolve, reject) => {
     JWT.verify(
-      token,
+      refreshToken,
       process.env.REFRESH_TOKEN_SECRET_KEY,
       async (err, payload) => {
         try {
