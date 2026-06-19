@@ -1,0 +1,23 @@
+name: Backend CI/CD (Self-Hosted)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update Docker Container
+        run: |
+          git config --global --add safe.directory /var/www/karbama/backend
+
+          cd /var/www/karbama/backend
+          git pull origin main
+          
+          cd /var/www/karbama
+          docker compose up -d --build backend
