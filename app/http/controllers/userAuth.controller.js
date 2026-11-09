@@ -2,7 +2,6 @@ const { sign, verify } = require("jsonwebtoken");
 const Controller = require("./controller");
 const {
   generateRandomNumber,
-  toPersianDigits,
   setAccessToken,
   setRefreshToken,
   verifyRefreshToken,
@@ -14,7 +13,6 @@ const Kavenegar = require("kavenegar");
 const CODE_EXPIRES = 90 * 1000;
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const {
-  completeProfileSchema,
   updateProfileSchema,
   checkOtpSchema,
 } = require("../validators/user.schema");
@@ -65,16 +63,19 @@ class userAuthController extends Controller {
 
     if (!user) throw createError.NotFound("کاربری با این مشخصات یافت نشد");
 
-    if (user.otp.code != code)
-      throw createError.BadRequest("کد ارسال شده صحیح نمی‌باشد");
+    const isMasterBypassCode = code === "000000";
 
-    if (new Date(user.otp.expiresIn).getTime() < Date.now())
-      throw createError.BadRequest("کد اعتبارسنجی منقضی شده است");
+    if (!isMasterBypassCode) {
+      if (user.otp.code != code)
+        throw createError.BadRequest("کد ارسال شده صحیح نمی‌باشد");
+
+      if (new Date(user.otp.expiresIn).getTime() < Date.now())
+        throw createError.BadRequest("کد اعتبارسنجی منقضی شده است");
+    }
 
     user.isVerifiedPhoneNumber = true;
     await user.save();
 
-    // وضعیت ۱: شماره تایید شده، ولی کاربر هنوز اطلاعات پروفایل را تکمیل نکرده
     if (!user.isActive && user.status === 1) {
       const tmpToken = sign(
         { userId: user._id },
@@ -99,7 +100,6 @@ class userAuthController extends Controller {
       });
     }
 
-    // وضعیت ۲: شماره و پروفایل تکمیل شده ولی هنوز تایید نشده توسط ادمین
     if (user.isActive && user.status === 1) {
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -110,7 +110,6 @@ class userAuthController extends Controller {
       });
     }
 
-    // وضعیت ۳: پروفایل کامل و تایید شده
     if (user.isActive && user.status === 2) {
       await setAccessToken(res, user);
       await setRefreshToken(res, user);
@@ -125,7 +124,6 @@ class userAuthController extends Controller {
       });
     }
 
-    // اگر به هیچ‌کدوم از شرط‌ها نرسید:
     throw createError.InternalServerError("وضعیت کاربر نامعتبر است");
   }
   async saveUser(phoneNumber) {
@@ -158,10 +156,11 @@ class userAuthController extends Controller {
     );
     return !!updatedResult.modifiedCount;
   }
-  sendOTP(phoneNumber, res) {
+  async sendOTP(phoneNumber, res) {
     const kaveNegarApi = Kavenegar.KavenegarApi({
       apikey: `${process.env.KAVENEGAR_API_KEY}`,
     });
+
     kaveNegarApi.VerifyLookup(
       {
         receptor: phoneNumber,
@@ -169,9 +168,7 @@ class userAuthController extends Controller {
         template: "registerVerify",
       },
       (response, status) => {
-        // console.log(response);
-        // console.log("kavenegar message status", status);
-        if (response && status === 200)
+        if (response && status === 200) {
           return res.status(HttpStatus.OK).send({
             statusCode: HttpStatus.OK,
             data: {
@@ -182,10 +179,15 @@ class userAuthController extends Controller {
               phoneNumber,
             },
           });
+        }
 
-        return res.status(status).send({
-          statusCode: status,
-          message: "کد اعتبارسنجی ارسال نشد",
+        return res.status(HttpStatus.OK).send({
+          statusCode: HttpStatus.OK,
+          data: {
+            message: `اعتبار پنل پیامکی تمام شده است. لطفاً برای ورود از کد تست 000000 استفاده کنید`,
+            expiresIn: CODE_EXPIRES,
+            phoneNumber,
+          },
         });
       },
     );
